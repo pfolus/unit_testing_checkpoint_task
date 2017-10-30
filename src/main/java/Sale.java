@@ -1,10 +1,11 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Sale {
 
-    String productName;
-    BigDecimal netValue;
-    int taxRate;
+    private String productName;
+    private BigDecimal netValue;
+    private int taxRate;
 
     public Sale() {
         this.productName = "default name";
@@ -37,8 +38,6 @@ public class Sale {
     public void setNetValue(BigDecimal netValue) throws IllegalArgumentException {
         if(netValue.compareTo(new BigDecimal("0")) != 1) {
             throw new IllegalArgumentException("Net Value should be a positive number");
-        } else if(getDecimalsNumber(netValue) != 2){
-            throw new IllegalArgumentException("Net Value should be formatted with 2 decimal places");
         }
         this.netValue = netValue;
     }
@@ -54,24 +53,16 @@ public class Sale {
         this.taxRate = taxRate;
     }
 
-    private int getDecimalsNumber(BigDecimal number) {
-        String string = number.stripTrailingZeros().toPlainString();
-        int index = string.indexOf(".");
-
-        if (index < 0) {
-            return 0;
-        } else {
-            return string.length() - index - 1;
-        }
-    }
-
     public BigDecimal getGrossValue() {
 
         BigDecimal grossValue;
+        BigDecimal taxValue;
         BigDecimal tempValue;
 
         tempValue = this.netValue.multiply(new BigDecimal(this.taxRate));
-        grossValue = tempValue.multiply(new BigDecimal("0.01"));
+        taxValue = tempValue.multiply(new BigDecimal("0.01"));
+        grossValue = this.netValue.add(taxValue);
+        grossValue = grossValue.setScale(2, RoundingMode.CEILING);
 
         return grossValue;
     }

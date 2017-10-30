@@ -3,11 +3,11 @@ import java.util.Calendar;
 
 public class Customer {
 
-    String name;
-    String surname;
-    int birthyear;
-    String gender;
-    ArrayList<Sale> sales;
+    private String name;
+    private String surname;
+    private int birthyear;
+    private String gender;
+    private ArrayList<Sale> sales;
 
     public Customer() {
         this.name = "default name";
@@ -18,7 +18,11 @@ public class Customer {
     }
 
     public Customer(String name, String surname, int birthyear, String gender) throws IllegalArgumentException {
-
+        setName(name);
+        setSurname(surname);
+        setBirthyear(birthyear);
+        setGender(gender);
+        this.sales = new ArrayList<Sale>();
     }
 
     public void setName(String name) throws IllegalArgumentException {
@@ -35,7 +39,7 @@ public class Customer {
         this.surname = surname;
     }
 
-    public void setBirthyear(int birthyear) {
+    public void setBirthyear(int birthyear) throws IllegalArgumentException {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         if (birthyear <= 1900 || birthyear > year ){
             throw new IllegalArgumentException("Wrong birthyear ( should be between 1900 and current year)");
@@ -69,5 +73,17 @@ public class Customer {
     public int getAge() {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         return year - birthyear;
+    }
+
+    public void addSale() {
+        this.sales.add(new Sale());
+    }
+
+    public int getSalesCount() {
+        int count = 0;
+        for (Sale item : this.sales) {
+            count++;
+        }
+        return count;
     }
 }
